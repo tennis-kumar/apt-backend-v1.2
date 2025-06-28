@@ -5,6 +5,8 @@ import dotenv from "dotenv";
 
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
+import { authenticateUser } from "./middlewares/authMiddleware.js";
+import apartmentRoutes from './routes/apartmentRoutes.js'
 
 dotenv.config();
 
@@ -14,6 +16,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.use('/api/auth', authRoutes);
+app.use('/api/apartments', apartmentRoutes);
 // Test route
 app.get('/',(req,res)=>{
     res.status(200).send('🏠 Apartment Management Backend is Running!');

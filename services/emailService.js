@@ -13,7 +13,7 @@ const sendOTPEmail = async (email, otpCode) => {
       sender,
       to: [{ email }],
       subject: 'Your Login OTP',
-      htmlContent: `Your OTP is: <strong>${otpCode}</strong> (valid for 15 minutes)`
+      htmlContent: `Your OTP is: <strong>${otpCode}</strong> (valid for 10 minutes)`
     });
     console.log('📧 OTP Sent to:', email);
     return true;
