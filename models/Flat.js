@@ -1,5 +1,4 @@
-import mongoose, { mongo } from "mongoose";
-import { validate } from "uuid";
+import mongoose from "mongoose";
 
 const flatSchema = new mongoose.Schema({
     apartment: {

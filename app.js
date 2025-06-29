@@ -8,6 +8,8 @@ import authRoutes from "./routes/authRoutes.js";
 import { authenticateUser } from "./middlewares/authMiddleware.js";
 import apartmentRoutes from './routes/apartmentRoutes.js'
 import flatRoutes from './routes/flatRoutes.js'
+import residentRoutes from './routes/residentRoutes.js'
+import waterRoutes from './routes/waterRoutes.js'
 
 dotenv.config();
 
@@ -16,9 +18,20 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
+app.use( (req, res, next) => {
+    if (req.method == 'POST' && !req.is('application/json')){
+        return res.status(415).json({
+            error: 'Content-TYpe must be application/json'
+        });
+    }
+    next();
+});
+
 app.use('/api/auth', authRoutes);
 app.use('/api/apartments', apartmentRoutes);
 app.use('/api/flats', flatRoutes);
+app.use('/api/residents', residentRoutes);
+app.use('/api/water', waterRoutes);
 
 // Test route
 app.get('/',(req,res)=>{
