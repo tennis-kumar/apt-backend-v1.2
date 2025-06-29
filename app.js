@@ -12,6 +12,8 @@ import residentRoutes from './routes/residentRoutes.js'
 import waterRoutes from './routes/waterRoutes.js'
 import maintenanceRoutes from './routes/maintenanceRoutes.js'
 import dashboardRoutes from './routes/dashboardRoutes.js';
+import communityRoutes from './routes/communityRoutes.js';
+import expenseRoutes from './routes/expenseRoutes.js';
 
 dotenv.config();
 
@@ -36,6 +38,8 @@ app.use('/api/residents', residentRoutes);
 app.use('/api/water', waterRoutes);
 app.use('/api/maintenance', maintenanceRoutes);
 app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/community', communityRoutes);
+app.use('/api/apartment', expenseRoutes);
 
 // Test route
 app.get('/',(req,res)=>{

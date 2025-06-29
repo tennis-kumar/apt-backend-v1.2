@@ -65,3 +65,60 @@ export const getDashboardStats = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+const monthNames = ["January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"];
+
+export const getAppDashboard = async (req, res) => {
+  try {
+    const user = req.user; // From auth middleware
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+
+    // 1. Get flat details
+    const flat = await Flat.findById(user.flat)
+      .populate('apartment')
+      .populate('resident');
+
+    // 2. Get water readings
+    const waterReadings = await WaterUsage.find({ 
+      flat: user.flat,
+      year: currentYear,
+      $or: [
+        { month: currentMonth }, // Current month
+        { month: currentMonth - 1 } // Last month
+      ]
+    }).sort({ month: 1 });
+
+    // 3. Get maintenance status
+    const maintenance = await MaintenanceBill.findOne({
+      flat: user.flat,
+      month: currentMonth,
+      year: currentYear
+    });
+
+    // 4. Format response
+    const lastMonthReading = waterReadings[0]?.unitsUsed || 0;
+    const currentMonthReading = waterReadings[1]?.unitsUsed || 0;
+
+    res.json({
+      status: 'success',
+      data: {
+        month: monthNames[currentMonth],
+        lastMonthReading,
+        currentMonthReading,
+        consumedLiters: currentMonthReading - lastMonthReading,
+        justWaterBill: waterReadings[1]?.amount || 0,
+        apartmentOverallExpense: 57000, // Will implement later
+        flatOwnerName: flat.resident?.name || 'Not assigned'
+      }
+    });
+
+  } catch (error) {
+    res.status(500).json({ 
+      status: 'error',
+      message: error.message 
+    });
+  }
+};

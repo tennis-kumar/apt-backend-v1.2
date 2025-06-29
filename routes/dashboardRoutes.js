@@ -1,9 +1,10 @@
 import express from 'express';
-import { getDashboardStats } from '../controllers/dashboardController.js';
+import { getDashboardStats, getAppDashboard } from '../controllers/dashboardController.js';
 import { authenticateUser } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
-router.get('/', authenticateUser, getDashboardStats);
+router.get('/proto', authenticateUser, getDashboardStats);
+router.get('/', authenticateUser, getAppDashboard);
 
 export default router;

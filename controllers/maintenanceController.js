@@ -100,3 +100,27 @@ export const markBillAsPaid = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+export const getMaintenanceHistory = async (req, res) => {
+  try {
+    const user = req.user;
+    const bills = await MaintenanceBill.find({ 
+      flat: user.flat 
+    }).sort({ year: -1, month: -1 });
+
+    res.json({
+      status: 'success',
+      data: bills.map(bill => ({
+        month: monthNames[bill.month - 1],
+        amount: bill.amount.toLocaleString('en-IN'),
+        isPaid: bill.paid
+      }))
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: error.message
+    });
+  }
+};

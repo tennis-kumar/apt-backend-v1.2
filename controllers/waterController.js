@@ -32,14 +32,47 @@ export const recordUsage = async(req, res)=>{
     }
 }
 
+// export const getWaterHistory = async (req, res) => {
+//   try {
+//     const { flatId } = req.params;
+//     const history = await WaterUsage.find({ flat: flatId })
+//       .sort({ year: -1, month: -1 });
+
+//     res.json(history);
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// };
+
 export const getWaterHistory = async (req, res) => {
   try {
-    const { flatId } = req.params;
-    const history = await WaterUsage.find({ flat: flatId })
-      .sort({ year: -1, month: -1 });
+    const user = req.user;
+    const readings = await WaterUsage.find({ 
+      flat: user.flat 
+    }).sort({ year: -1, month: -1 });
 
-    res.json(history);
+    let prevReading = 0;
+    const history = readings.map(reading => {
+      const record = {
+        month: monthNames[reading.month - 1],
+        oldReading: prevReading,
+        newReading: reading.unitsUsed,
+        amount: reading.amount,
+        amountPaid: false // Need payment integration
+      };
+      prevReading = reading.unitsUsed;
+      return record;
+    });
+
+    res.json({
+      status: 'success',
+      data: history
+    });
+
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({
+      status: 'error',
+      message: error.message
+    });
   }
 };
