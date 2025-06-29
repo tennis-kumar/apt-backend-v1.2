@@ -10,6 +10,8 @@ import apartmentRoutes from './routes/apartmentRoutes.js'
 import flatRoutes from './routes/flatRoutes.js'
 import residentRoutes from './routes/residentRoutes.js'
 import waterRoutes from './routes/waterRoutes.js'
+import maintenanceRoutes from './routes/maintenanceRoutes.js'
+import dashboardRoutes from './routes/dashboardRoutes.js';
 
 dotenv.config();
 
@@ -32,6 +34,8 @@ app.use('/api/apartments', apartmentRoutes);
 app.use('/api/flats', flatRoutes);
 app.use('/api/residents', residentRoutes);
 app.use('/api/water', waterRoutes);
+app.use('/api/maintenance', maintenanceRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 // Test route
 app.get('/',(req,res)=>{
